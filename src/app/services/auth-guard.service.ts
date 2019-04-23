@@ -6,7 +6,7 @@ import * as firebase from 'firebase';
 @Injectable()
 export class AuthGuardService implements CanActivate {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router) {}
 
   canActivate(): Observable<boolean> | Promise<boolean> | boolean {
     return new Promise(
@@ -15,7 +15,7 @@ export class AuthGuardService implements CanActivate {
           (user) => {
             if(user) {
               resolve(true);
-              console.log(user.uid);
+            //  console.log(user.uid);
             } else {
               this.router.navigate(['/auth', 'signin']);
               resolve(false);

@@ -9,14 +9,21 @@ import { SingleBookComponent } from './book-list/single-book/single-book.compone
 import { BookFormComponent } from './book-list/book-form/book-form.component';
 import { HeaderComponent } from './header/header.component';
 import {AuthGuardService} from './services/auth-guard.service';
+import {AdminGuardService} from './services/admin-guard.service';
+
 import {AuthService} from './services/auth.service';
+import {AdminService} from './services/admin.service';
+import {UserService} from './services/user.service';
+
 import {BooksService} from './services/books.service';
 import {HttpClientModule} from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule, Routes} from '@angular/router';
+import { AdminComponent } from './admin/admin.component';
 
 const appRoutes: Routes = [
   { path: 'auth/signup', component: SignupComponent },
+  { path: 'admin', canActivate: [AdminGuardService], component: AdminComponent },
   { path: 'auth/signin', component: SigninComponent },
   { path: 'books', canActivate: [AuthGuardService], component: BookListComponent },
   { path: 'books/new', canActivate: [AuthGuardService], component: BookFormComponent },
@@ -32,7 +39,8 @@ const appRoutes: Routes = [
     BookListComponent,
     SingleBookComponent,
     BookFormComponent,
-    HeaderComponent
+    HeaderComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule,
@@ -42,7 +50,7 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes)
 
   ],
-  providers: [AuthService, BooksService, AuthGuardService],
+  providers: [AuthService, BooksService, AuthGuardService, AdminGuardService, AdminService, UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

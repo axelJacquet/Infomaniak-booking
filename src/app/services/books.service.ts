@@ -11,11 +11,21 @@ export class BooksService {
   books: Book[] = [];
   booksSubject = new Subject<Book[]>();
 
+
+
+
+
+
+
+
+
+
   emitBooks() {
     this.booksSubject.next(this.books);
   }
 
   saveBooks() {
+    console.log(this.books);
     firebase.database().ref('/books').set(this.books);
 }
 
@@ -26,8 +36,6 @@ getBooks() {
           this.emitBooks();
         }
       );
-
-
   }
 
   getSingleBook(id: number) {
@@ -35,6 +43,7 @@ getBooks() {
       (resolve, reject) => {
         firebase.database().ref('/books/' + id).once('value').then(
           (data: DataSnapshot) => {
+            console.log(data.val().photo)
             resolve(data.val());
           }, (error) => {
             reject(error);
@@ -73,10 +82,51 @@ createNewBook(newBook: Book) {
         }
       }
     );
+    console.log("Before");
+    console.log(this.books);
     this.books.splice(bookIndexToRemove, 1);
+    console.log("After");
+    console.log(this.books);
     this.saveBooks();
     this.emitBooks();
 }
+
+
+followBook(bookId) {
+  var userId;
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      var userId = user.uid
+      console.log(bookId)
+
+
+      firebase.database().ref('/users/' + userId).once('value').then((snapshot) => {
+          console.log(snapshot.val())
+          var roles =  snapshot.val().roles;
+          var email =  snapshot.val().email;
+          var books =  snapshot.val().books;
+          var booksAfter = [];
+          if (books){
+            Object.assign(booksAfter, books);
+            booksAfter.push(bookId);
+          } else {
+              booksAfter.push(bookId);
+          }
+         firebase.database().ref('users/' + userId).set({
+            roles : roles,
+            email: email,
+            books: booksAfter
+          });
+        });
+    } else {
+      console.log("Vous etes pas connecter Impossible de s'abonner");
+    }
+  });
+
+}
+
+
+
 
   uploadFile(file: File) {
     return new Promise(

@@ -24,15 +24,18 @@ export class SignupComponent implements OnInit {
   initForm() {
     this.signupForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]]
+      password: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]],
+      admin: []
     });
   }
 
   onSubmit() {
     const email = this.signupForm.get('email').value;
     const password = this.signupForm.get('password').value;
+    const admin = this.signupForm.get('admin').value;
 
-    this.authService.createNewUser(email, password).then(
+
+    this.authService.createNewUser(email, password, admin).then(
       () => {
         this.router.navigate(['/books']);
       },

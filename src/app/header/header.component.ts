@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
+import { AdminService } from '../services/admin.service';
+
 import * as firebase from 'firebase';
 
 @Component({
@@ -8,10 +10,11 @@ import * as firebase from 'firebase';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-
+  admin: Boolean = false;
   isAuth: boolean;
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private adminService: AdminService) { }
+
 
   ngOnInit() {
     firebase.auth().onAuthStateChanged(
@@ -21,12 +24,24 @@ export class HeaderComponent implements OnInit {
         } else {
           this.isAuth = false;
         }
+        return this.adminService
+            .myRole()
+            .then(roles => {
+              if(roles == "BIBLIOTHECAIRE") {
+                this.admin = true;
+              } else if (roles == "USER"){
+                this.admin = false;
+              } else {
+                this.admin = false;
+              }
+            });
       }
     );
   }
 
   onSignOut() {
     this.authService.signOutUser();
+    this.admin = false;
   }
 
 }
