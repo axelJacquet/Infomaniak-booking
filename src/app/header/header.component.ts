@@ -11,7 +11,7 @@ import * as firebase from 'firebase';
 })
 export class HeaderComponent implements OnInit {
   admin: Boolean = false;
-  isAuth: boolean;
+  isAuth: Boolean;
 
   constructor(private authService: AuthService, private adminService: AdminService) { }
 

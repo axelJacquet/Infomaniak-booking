@@ -9,7 +9,7 @@ import { BooksService } from '../../services/books.service';
   styleUrls: ['./single-book.component.scss']
 })
 export class SingleBookComponent implements OnInit {
-
+  edit: boolean = false;
   book: Book;
 
   constructor(private route: ActivatedRoute, private booksService: BooksService,
@@ -28,4 +28,16 @@ export class SingleBookComponent implements OnInit {
   onBack() {
     this.router.navigate(['/books']);
   }
+
+  Onedit(){
+
+    this.edit= true;
+    console.log(this.edit);
+  }
+  BookStatus() {
+  this.booksService.bookUpdate(this.book.title, this.book.author, this.book.synopsis, this.route.snapshot.params['id']);
+  this.edit= false;
+
+  }
+
 }

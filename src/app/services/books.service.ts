@@ -13,13 +13,6 @@ export class BooksService {
 
 
 
-
-
-
-
-
-
-
   emitBooks() {
     this.booksSubject.next(this.books);
   }
@@ -58,6 +51,7 @@ getBooks() {
 }
 
 createNewBook(newBook: Book) {
+  console.log(newBook);
     this.books.push(newBook);
     this.saveBooks();
     this.emitBooks();
@@ -84,7 +78,8 @@ createNewBook(newBook: Book) {
     );
     console.log("Before");
     console.log(this.books);
-    this.books.splice(bookIndexToRemove, 1);
+    this.books[bookIndexToRemove] = null;
+
     console.log("After");
     console.log(this.books);
     this.saveBooks();
@@ -92,36 +87,18 @@ createNewBook(newBook: Book) {
 }
 
 
-followBook(bookId) {
-  var userId;
-  firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-      var userId = user.uid
-      console.log(bookId)
 
 
-      firebase.database().ref('/users/' + userId).once('value').then((snapshot) => {
-          console.log(snapshot.val())
-          var roles =  snapshot.val().roles;
-          var email =  snapshot.val().email;
-          var books =  snapshot.val().books;
-          var booksAfter = [];
-          if (books){
-            Object.assign(booksAfter, books);
-            booksAfter.push(bookId);
-          } else {
-              booksAfter.push(bookId);
-          }
-         firebase.database().ref('users/' + userId).set({
-            roles : roles,
-            email: email,
-            books: booksAfter
-          });
-        });
-    } else {
-      console.log("Vous etes pas connecter Impossible de s'abonner");
-    }
-  });
+
+unFollowBook(bookId) {
+
+      var newData={
+          subscriber: null,
+          email: null
+      }
+    firebase.database().ref('books/' + bookId + "/").update(newData);
+
+
 
 }
 
@@ -149,4 +126,36 @@ followBook(bookId) {
       }
     );
 }
+
+
+
+
+
+
+
+
+
+
+followBook(bookId, userId, email) {
+      var newData={
+          subscriber: userId,
+          email: email
+      }
+      firebase.database().ref('books/' + bookId + "/").update(newData);
+}
+bookUpdate(title, author, synopsis, id){
+
+  var newData={
+      author: author,
+      title: title,
+      synopsis: synopsis
+  }
+firebase.database().ref('books/' + id + "/").update(newData);
+
+
+}
+
+
+
+
 }

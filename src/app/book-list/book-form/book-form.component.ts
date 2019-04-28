@@ -39,6 +39,7 @@ export class BookFormComponent implements OnInit {
     if(this.fileUrl && this.fileUrl !== '') {
       newBook.photo = this.fileUrl;
     }
+    console.log(newBook);
     this.booksService.createNewBook(newBook);
     this.router.navigate(['/books']);
 }
