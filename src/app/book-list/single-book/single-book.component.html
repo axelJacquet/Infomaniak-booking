@@ -17,7 +17,7 @@
 
 
     <button class="btn btn-default" (click)="onBack()">Retour</button>
-    <button class="btn btn-default" *ngIf="!edit" (click)="Onedit()">editer</button>
+    <button class="btn btn-default" *ngIf="!edit && admin" (click)="Onedit()" >editer</button>
     <button class="btn btn-default" *ngIf="edit" (click)="BookStatus()">enregistrer</button>
   </div>
 </div>
